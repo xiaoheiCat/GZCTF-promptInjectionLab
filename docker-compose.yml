@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  prompt-injection-lab:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - GZCTF_FLAG=${GZCTF_FLAG:-flag{test_flag_for_development}}
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key-here}
+    volumes:
+      - ./config.json:/app/config.json:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - prompt-injection-net
+
+networks:
+  prompt-injection-net:
+    driver: bridge
